@@ -25,9 +25,7 @@ public class FoodTruckListActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_food_truck_list_activity);
 		
-		//String url = "http://localhost:3005/api/v1/foodtruck";
 		String url = "http://10.0.2.2:3005/api/v1/foodtruck";
-		//String url = "http://192.168.1.3.3:3005/api/v1/foodtruck";
 		final ArrayList<FoodTruck> foodTruckList = new ArrayList<>();
 		
 		final JsonArrayRequest getTrucks = new JsonArrayRequest(Request.Method.GET, url, null,
@@ -41,25 +39,25 @@ public class FoodTruckListActivity extends AppCompatActivity {
 					for(int x = 0; x < foodTrucks.length();x++){
 						JSONObject foodTruck = foodTrucks.getJSONObject(x);
 						String name = foodTruck.getString("name");
-						String id = foodTruck.getString("id");
+						String id = foodTruck.getString("_id");
 						String foodType = foodTruck.getString("foodtype");
 						Double avgCost = foodTruck.getDouble("avgcost");
-						
+
 						JSONObject geometry = foodTruck.getJSONObject("geometry");
-						JSONObject coordinates = foodTruck.getJSONObject("coordinates");
-						
+						JSONObject coordinates = geometry.getJSONObject("coordinates");
+
 						Double latitude = coordinates.getDouble("lat");
 						Double longitude = coordinates.getDouble("long");
-						
+
 						FoodTruck newFoodTruck = new FoodTruck(id,name,foodType,avgCost,latitude,longitude);
 						foodTruckList.add(newFoodTruck);
+						
+						System.out.println("This is the food truck name - " + foodTruckList.get(x).getName());
 					}
-					
+
 				}catch (JSONException je){
 					Log.v("JSON","EXEC" + je.getLocalizedMessage());
 				}
-				
-				System.out.println("This is the food truck name - " + foodTruckList.get(0).getName());
 			}
 		}, new Response.ErrorListener() {
 			@Override
