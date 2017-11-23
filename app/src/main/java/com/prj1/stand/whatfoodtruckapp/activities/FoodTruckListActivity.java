@@ -1,7 +1,10 @@
 package com.prj1.stand.whatfoodtruckapp.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -10,7 +13,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.prj1.stand.whatfoodtruckapp.R;
+import com.prj1.stand.whatfoodtruckapp.adapter.FoodTruckAdapter;
+import com.prj1.stand.whatfoodtruckapp.data.DataService;
 import com.prj1.stand.whatfoodtruckapp.model.FoodTruck;
+import com.prj1.stand.whatfoodtruckapp.view.ItemDecorator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,53 +25,59 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class FoodTruckListActivity extends AppCompatActivity {
+	private FoodTruckAdapter adapter;
+	private ArrayList<FoodTruck> trucks = new ArrayList<>();
+	private static FoodTruckListActivity foodTruckListActivity;
+	public static final String EXTRA_ITEM_TRUCK = "TRUCK";
+	
+	public static FoodTruckListActivity getFoodTruckListActivity() {
+		return foodTruckListActivity;
+	}
+	
+	public static void setFoodTruckListActivity(FoodTruckListActivity foodTruckListActivity) {
+		FoodTruckListActivity.foodTruckListActivity = foodTruckListActivity;
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_food_truck_list_activity);
 		
-		String url = "http://10.0.2.2:3005/api/v1/foodtruck";
-		final ArrayList<FoodTruck> foodTruckList = new ArrayList<>();
+		foodTruckListActivity.setFoodTruckListActivity(this);
 		
-		final JsonArrayRequest getTrucks = new JsonArrayRequest(Request.Method.GET, url, null,
-				new Response.Listener<JSONArray>() {
+		TrucksDownloaded listener = new TrucksDownloaded() {
 			@Override
-			public void onResponse(JSONArray response) {
-				//Log.v("API", "Response list: " + response.toString());
-				System.out.println("Response list: " + response.toString());
-				try{
-					JSONArray foodTrucks = response;
-					for(int x = 0; x < foodTrucks.length();x++){
-						JSONObject foodTruck = foodTrucks.getJSONObject(x);
-						String name = foodTruck.getString("name");
-						String id = foodTruck.getString("_id");
-						String foodType = foodTruck.getString("foodtype");
-						Double avgCost = foodTruck.getDouble("avgcost");
-
-						JSONObject geometry = foodTruck.getJSONObject("geometry");
-						JSONObject coordinates = geometry.getJSONObject("coordinates");
-
-						Double latitude = coordinates.getDouble("lat");
-						Double longitude = coordinates.getDouble("long");
-
-						FoodTruck newFoodTruck = new FoodTruck(id,name,foodType,avgCost,latitude,longitude);
-						foodTruckList.add(newFoodTruck);
-						
-						System.out.println("This is the food truck name - " + foodTruckList.get(x).getName());
-					}
-
-				}catch (JSONException je){
-					Log.v("JSON","EXEC" + je.getLocalizedMessage());
+			public void success(Boolean success) {
+				if(success){
+					setUpRecycler();
 				}
 			}
-		}, new Response.ErrorListener() {
-			@Override
-			public void onErrorResponse(VolleyError error) {
-				Log.v("API", "Error " + error.getLocalizedMessage());
-			}
-		});
+		};
 		
-		Volley.newRequestQueue(this).add(getTrucks);
+		setUpRecycler();
+		trucks = DataService.getInstance().downloadAllFoodTruck(this,listener);
+	}
+	
+	private void setUpRecycler(){
+		RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyeler_foodtruck);
+		recyclerView.setHasFixedSize(true);
+		
+		adapter = new FoodTruckAdapter(trucks);
+		recyclerView.setAdapter(adapter);
+		
+		LinearLayoutManager layoutManager = new LinearLayoutManager(getBaseContext());
+		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+		recyclerView.setLayoutManager(layoutManager);
+		recyclerView.addItemDecoration(new ItemDecorator(0,0,0,10));
+	}
+	
+	public interface TrucksDownloaded{
+		void success(Boolean success);
+	}
+	
+	public void loadFoodTruckDetailActivity(FoodTruck truck){
+		Intent intent = new Intent(FoodTruckListActivity.this, FoodTruckDetailActivity.class);
+		intent.putExtra(FoodTruckListActivity.EXTRA_ITEM_TRUCK,truck);
+		startActivity(intent);
 	}
 }
