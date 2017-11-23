@@ -13,7 +13,7 @@ import com.prj1.stand.whatfoodtruckapp.model.FoodTruck;
 import java.util.ArrayList;
 
 /**
- * FoodTruckAdapter - The retrieval of api data for the UI
+ * FoodTruckAdapter - The retrievals info from the api to pass to the UI
  *
  * Created by Stand on 11/22/2017.
  */

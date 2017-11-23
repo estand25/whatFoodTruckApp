@@ -6,4 +6,5 @@ package com.prj1.stand.whatfoodtruckapp.constants;
 
 public class Constants {
 	public final static String GET_FOOD_TRUCK = "http://10.0.2.2:3005/api/v1/foodtruck";
+	public final static String GET_REVIEWS = "http://10.0.2.2:3005/api/v1/foodtruck/Reviews/";
 }

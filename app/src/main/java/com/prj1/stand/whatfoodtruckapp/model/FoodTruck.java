@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Object model for FoodTruck Scheme from foodtruck-api
+ * Food Truck - Model
  *
  * Created by Stand on 7/22/2017.
  */
