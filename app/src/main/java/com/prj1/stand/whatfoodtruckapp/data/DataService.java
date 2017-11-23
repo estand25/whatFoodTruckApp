@@ -21,7 +21,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * Data Service - Handles retrieving info. from the api
+ * Data Service - Handles retrieving info. (All Food Trucks and Reviews) from the api
  *
  * Created by Stand on 11/22/2017.
  */

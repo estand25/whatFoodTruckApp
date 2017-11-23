@@ -9,6 +9,8 @@ import com.prj1.stand.whatfoodtruckapp.model.FoodTruckReview;
 
 
 /**
+ * ReviewHolder - Handlers the populating of the UI
+ *
  * Created by Stand on 11/22/2017.
  */
 
