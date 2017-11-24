@@ -52,7 +52,7 @@ public class AddReviewActivity extends AppCompatActivity {
 				// DataService
 				final String title = reviewTitle.getText().toString();
 				final String text = reviewText.getText().toString();
-				DataService.getInstance().AddReview(title,text,foodTruck,getBaseContext(),listener,authToken);
+				DataService.getInstance().addReview(title,text,foodTruck,getBaseContext(),listener,authToken);
 			}
 		});
 		

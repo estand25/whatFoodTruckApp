@@ -133,13 +133,13 @@ public class DataService {
 	}
 	
 	// Add review to Food Truck
-	public void AddReview(String title, String text, FoodTruck foodTruck, Context context, final AddReviewActivity.AddReviewInterface listener, String authToken){
-		try{
+	public void addReview(String title, String text, FoodTruck foodTruck, Context context, final AddReviewActivity.AddReviewInterface listener, String authToken) {
+		try {
 			String url = Constants.ADD_REVIEW + foodTruck.getId();
 			
 			JSONObject jsonBody = new JSONObject();
 			jsonBody.put("title", title);
-			jsonBody.put("text",text);
+			jsonBody.put("text", text);
 			jsonBody.put("foodtruck", foodTruck.getId());
 			
 			final String mRequestBody = jsonBody.toString();
@@ -148,37 +148,38 @@ public class DataService {
 			JsonObjectRequest reviewRequest = new JsonObjectRequest(Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
 				@Override
 				public void onResponse(JSONObject response) {
-					try{
+					try {
 						String message = response.getString("message");
-						Log.i("Json Message",message);
-					}catch (JSONException e){
-						Log.v("Json", e.getLocalizedMessage());
+						Log.i("JSON Message", message);
+					} catch (JSONException e) {
+						Log.v("JSON", "EXC: " + e.getLocalizedMessage());
 					}
 				}
 			}, new Response.ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
-					Log.v("VolleyE",error.getLocalizedMessage());
+					Log.e("VOLLEY", error.toString());
 				}
-			}){
+			}) {
+				
 				@Override
 				public String getBodyContentType() {
-					return "applicant/json; charset=utf-8";
+					return "application/json; charset=utf-8";
 				}
 				
 				@Override
 				public byte[] getBody() {
 					try {
 						return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
-					}catch(UnsupportedEncodingException use){
-						VolleyLog.wtf("Unsupported Encoding", mRequestBody, "utf-8");
+					} catch (UnsupportedEncodingException uee) {
+						VolleyLog.wtf("Unsupported Encoding while trying", mRequestBody, "utf-8");
 						return null;
 					}
 				}
 				
 				@Override
 				protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
-					if(response.statusCode == 200){
+					if (response.statusCode == 200) {
 						listener.success(true);
 					}
 					return super.parseNetworkResponse(response);
@@ -186,14 +187,15 @@ public class DataService {
 				
 				@Override
 				public Map<String, String> getHeaders() throws AuthFailureError {
-					Map<String,String> header = new HashMap<>();
-					header.put("Authorization",bearer);
-					return header;
+					Map<String, String> headers = new HashMap<>();
+					headers.put("Authorization", bearer);
+					
+					return headers;
 				}
 			};
 			
 			Volley.newRequestQueue(context).add(reviewRequest);
-		}catch (JSONException e){
+		} catch (JSONException e){
 			e.printStackTrace();
 		}
 	}
