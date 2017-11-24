@@ -118,6 +118,7 @@ public class AuthService {
 						JSONObject account = response;
 						authToken = account.getString("token");
 						useremail = account.getString("user");
+						listener.success(true);
 						
 					}catch (JSONException je){
 						Log.v("JSON", "EXEC" +je.getLocalizedMessage());
@@ -146,8 +147,8 @@ public class AuthService {
 				
 				@Override
 				protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
-					if(response.statusCode == 200){
-						listener.success(true);
+					if(response.statusCode != 200){
+						listener.success(false);
 					}
 					return super.parseNetworkResponse(response);
 				}

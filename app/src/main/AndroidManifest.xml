@@ -52,6 +52,8 @@
             android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login">
         </activity>
+        <activity android:name=".activities.AddReviewActivity">
+        </activity>
     </application>
 
 </manifest>

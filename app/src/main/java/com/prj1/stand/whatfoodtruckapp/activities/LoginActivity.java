@@ -3,12 +3,13 @@ package com.prj1.stand.whatfoodtruckapp.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.prj1.stand.whatfoodtruckapp.R;
+import com.prj1.stand.whatfoodtruckapp.constants.Constants;
 import com.prj1.stand.whatfoodtruckapp.data.AuthService;
 
 /**
@@ -29,6 +31,10 @@ public class LoginActivity extends AppCompatActivity{
 	private EditText mPasswordView;
 	private View mProgressView;
 	private View mLoginFormView;
+	private String authToken;
+	private String authUserEmail;
+	private Boolean isLoggedIn = false;
+	SharedPreferences prefs;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +42,7 @@ public class LoginActivity extends AppCompatActivity{
 		setContentView(R.layout.activity_login);
 		// Set up the login form.
 		mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		mPasswordView = (EditText) findViewById(R.id.password);
 		mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -68,8 +75,8 @@ public class LoginActivity extends AppCompatActivity{
 		mPasswordView.setError(null);
 		
 		// Store values at the time of the login attempt.
-		String email = mEmailView.getText().toString();
-		String password = mPasswordView.getText().toString();
+		final String email = mEmailView.getText().toString();
+		final String password = mPasswordView.getText().toString();
 		
 		boolean cancel = false;
 		View focusView = null;
@@ -102,22 +109,29 @@ public class LoginActivity extends AppCompatActivity{
 			showProgress(true);
 			
 			// Use out auth service api calls.
-			RegisterInterface registerInterface = new RegisterInterface() {
+			final LoginInterface loginInterface = new LoginInterface() {
 				@Override
 				public void success(Boolean success) {
-				
+					if(success){
+						authToken = AuthService.getInstance().getAuthToken();
+						//authUserEmail = AuthService.getInstance().getUseremail();
+						isLoggedIn = true;
+						
+						prefs.edit().putString(Constants.AUTH_TOKEN,authToken).apply();
+						prefs.edit().putBoolean(Constants.IS_LOGGED_IN,isLoggedIn).apply();
+						finish();
+					}
 				}
 			};
 			
-			LoginInterface loginInterface = new LoginInterface() {
+			RegisterInterface registerInterface = new RegisterInterface() {
 				@Override
 				public void success(Boolean success) {
-				
+					AuthService.getInstance().loginUser(email,password,getBaseContext(),loginInterface);
 				}
 			};
 			
 			AuthService.getInstance().registerUser(email,password,getBaseContext(), registerInterface);
-			AuthService.getInstance().loginUser(email,password,getBaseContext(),loginInterface);
 		}
 	}
 	
