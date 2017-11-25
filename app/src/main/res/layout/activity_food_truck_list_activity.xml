@@ -7,5 +7,27 @@
     android:layout_height="match_parent"
     tools:context="com.prj1.stand.whatfoodtruckapp.activities.FoodTruckListActivity">
 
-    <include layout="@layout/recycler_foodtruck"></include>
+    <include
+        android:id="@+id/include2"
+        layout="@layout/recycler_foodtruck"
+        android:layout_width="462dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></include>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/addTruckBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/include2"
+        app:srcCompat="@android:drawable/ic_menu_add"/>
 </android.support.constraint.ConstraintLayout>
