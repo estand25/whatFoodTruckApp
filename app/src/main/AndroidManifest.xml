@@ -56,6 +56,8 @@
         </activity>
         <activity android:name=".activities.AddTruckActivity">
         </activity>
+        <activity android:name=".activities.ModifyTruckActivity">
+        </activity>
     </application>
 
 </manifest>

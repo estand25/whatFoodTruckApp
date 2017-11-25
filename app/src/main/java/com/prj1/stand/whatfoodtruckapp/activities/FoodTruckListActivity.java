@@ -48,10 +48,10 @@ public class FoodTruckListActivity extends AppCompatActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		foodTruckListActivity.setFoodTruckListActivity(this);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_food_truck_list_activity);
 		
-		foodTruckListActivity.setFoodTruckListActivity(this);
 		addTruckBtn = (FloatingActionButton) findViewById(R.id.addTruckBtn);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		

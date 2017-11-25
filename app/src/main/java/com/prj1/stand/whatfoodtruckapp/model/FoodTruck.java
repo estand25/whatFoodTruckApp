@@ -11,7 +11,6 @@ import android.os.Parcelable;
 
 public class FoodTruck implements Parcelable{
 	private String id = "";
-	
 	private String name = "";
 	private String foodType = "";
 	private Double avgCost = 0.0;

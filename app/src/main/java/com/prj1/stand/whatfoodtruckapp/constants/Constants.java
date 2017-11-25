@@ -12,6 +12,7 @@ public class Constants {
 	public final static String LOGIN = "http://10.0.2.2:3005/api/v1/account/login";
 	public final static String ADD_REVIEW = "http://10.0.2.2:3005/api/v1/foodtruck/reviews/add/";
 	public final static String ADD_TRUCK = "http://10.0.2.2:3005/api/v1/foodtruck/add";
+	public final static String MODIFY_TRUCK = "http://10.0.2.2:3005/api/v1/foodtruck/";
 	
 	//Identities
 	public final static String AUTH_TOKEN = "AUTHTOKEN";
